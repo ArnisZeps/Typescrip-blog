@@ -1,23 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import BlogPage from "./components/pages/blogPage";
+import "./App.css";
+import { debug } from "console";
+
+interface IBlogItem {
+  key: number;
+  id: number;
+  text: string;
+  comments: string[];
+}
 
 function App() {
+  const [posts, setPosts] = useState<IBlogItem[]>([]);
+  const [newPost, setNewPost] = useState<string>("");
+  
+  const handleSetPost = (post: string) => {
+    setPosts((old) => [...old, { key:posts.length, id: posts.length, text: post, comments: [] }]);
+    setNewPost("");
+  };
+
+  const handleDeletePost = (id: number) =>{
+    const newItems = posts.filter(item => item.id !== id)
+    setPosts(newItems);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {
+          <BlogPage
+            posts={posts}
+            fieldValue={newPost}
+            handleSetPost={handleSetPost}
+            setNewPost={setNewPost}
+            handleDeletePost={handleDeletePost}
+          />
+        }
       </header>
     </div>
   );
